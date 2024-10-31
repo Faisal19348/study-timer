@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer with Audio Control</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            flex-direction: column;
+        }
+
+        #timer {
+            font-size: 20em; 
+            margin-bottom: 5px;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            cursor: pointer;
+            background-color: #1f1f1f;
+            color: #ffffff;
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #333333;
+        }
+    </style>
+</head>
+<body>
+    <div id="timer">02:00:00</div>
+    <div class="button-container">
+        <button onclick="startTimer()">Start</button>
+        <button onclick="pauseTimer()">Pause</button>
+        <button onclick="resumeTimer()">Resume</button>
+        <button onclick="resetTimer()">Reset</button>
+    </div>
+    <audio id="audio" src="C:\Users\mdash\Music\2 Hours Heart Touching Quran Reaction   Abdul Rahman Mossad   (HD).mp3" preload="auto"></audio>
+
+    <script>
+        let timerInterval;
+        let remainingTime = 2 * 60 * 60; // 2 hours in seconds
+        let isPaused = false;
+
+        const timerElement = document.getElementById("timer");
+        const audio = document.getElementById("audio");
+
+        function updateTimer() {
+            const hours = Math.floor(remainingTime / 3600);
+            const minutes = Math.floor((remainingTime % 3600) / 60);
+            const seconds = remainingTime % 60;
+
+            timerElement.textContent = 
+                `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+            if (remainingTime === 0) {
+                clearInterval(timerInterval);
+                audio.pause();
+                audio.currentTime = 0; // Reset audio to the beginning
+                print("Times up,very good,Go for a breake")
+            }
+        }
+
+        function startTimer() {
+            if (!timerInterval) {
+                timerInterval = setInterval(() => {
+                    if (!isPaused && remainingTime > 0) {
+                        remainingTime--;
+                        updateTimer();
+                        audio.play();
+                    }
+                }, 1000);
+            }
+        }
+
+        function pauseTimer() {
+            isPaused = true;
+            audio.pause();
+        }
+
+        function resumeTimer() {
+            isPaused = false;
+            audio.play();
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            remainingTime = 2 * 60 * 60;
+            updateTimer();
+            audio.pause();
+            audio.currentTime = 0;
+        }
+
+        updateTimer(); // Initialize timer display
+    </script>
+</body>
+</html>
